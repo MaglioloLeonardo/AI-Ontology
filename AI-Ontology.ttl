@@ -1,0 +1,758 @@
+@prefix : <http://example.org/ai-ontology#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix vann: <http://purl.org/vann/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@base <http://example.org/ai-ontology#> .
+
+<http://example.org/ai-ontology> rdf:type owl:Ontology ;
+                                  dc:creator "Leonardo Magliolo" ;
+                                  dc:date "2024-03-25" ;
+                                  dc:description "Ontology modeling AI systems, methods, models, tasks, and their relationships."@en ;
+                                  dc:rights "CC BY 4.0" ;
+                                  dc:title "Ontology of AI Systems"@en ;
+                                  dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+                                  vann:preferredNamespacePrefix "ai" ;
+                                  vann:preferredNamespaceUri "http://example.org/ai-ontology#" ;
+                                  rdfs:label "AI Systems Ontology"@en .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://purl.org/dc/elements/1.1/creator
+dc:creator rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/elements/1.1/date
+dc:date rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/elements/1.1/description
+dc:description rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/elements/1.1/rights
+dc:rights rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/elements/1.1/title
+dc:title rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/license
+dcterms:license rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/vann/preferredNamespacePrefix
+vann:preferredNamespacePrefix rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/vann/preferredNamespaceUri
+vann:preferredNamespaceUri rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#closeMatch
+skos:closeMatch rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#exactMatch
+skos:exactMatch rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#narrowMatch
+skos:narrowMatch rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Datatypes
+#################################################################
+
+###  http://www.w3.org/2001/XMLSchema#date
+xsd:date rdf:type rdfs:Datatype .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://example.org/ai-ontology#addressesTask
+:addressesTask rdf:type owl:ObjectProperty ;
+               owl:inverseOf :isTaskAddressedBy ;
+               rdfs:domain [ rdf:type owl:Class ;
+                             owl:unionOf ( :Model
+                                           :Paper
+                                         )
+                           ] ;
+               rdfs:range :Task ;
+               rdfs:comment "Relates a paper or model to the task it addresses."@en ;
+               rdfs:label "addresses task"@en .
+
+
+###  http://example.org/ai-ontology#applicationAreaOf
+:applicationAreaOf rdf:type owl:ObjectProperty ;
+                   owl:inverseOf :hasApplicationArea ;
+                   rdfs:domain :ApplicationArea ;
+                   rdfs:range :Task ;
+                   rdfs:comment "Relates an application area to the tasks that belong to it. (Inverse of hasApplicationArea.)"@en ;
+                   rdfs:label "application area of"@en .
+
+
+###  http://example.org/ai-ontology#authored
+:authored rdf:type owl:ObjectProperty ;
+          owl:inverseOf :hasAuthor ;
+          rdfs:domain :Author ;
+          rdfs:range :Paper ;
+          rdfs:comment "Relates an author to the papers they wrote. (Inverse of hasAuthor.)"@en ;
+          rdfs:label "authored"@en .
+
+
+###  http://example.org/ai-ontology#coAuthorOf
+:coAuthorOf rdf:type owl:ObjectProperty ,
+                     owl:SymmetricProperty ;
+            rdfs:domain :Author ;
+            rdfs:range :Author ;
+            owl:propertyChainAxiom ( :authored
+                                     :hasAuthor
+                                   ) ;
+            rdfs:comment "Two authors are co-authors if they have written the same paper."@en ;
+            rdfs:label "co-author of"@en .
+
+
+###  http://example.org/ai-ontology#employsModel
+:employsModel rdf:type owl:ObjectProperty ;
+              owl:inverseOf :isModelEmployedBy ;
+              rdfs:domain :Paper ;
+              rdfs:range :Model ;
+              rdfs:comment "Relates a paper to the model it employs."@en ;
+              rdfs:label "employs model"@en .
+
+
+###  http://example.org/ai-ontology#hasApplicationArea
+:hasApplicationArea rdf:type owl:ObjectProperty ;
+                    rdfs:domain :Task ;
+                    rdfs:range :ApplicationArea ;
+                    rdfs:comment "Relates a task to its application area."@en ;
+                    rdfs:label "has application area"@en .
+
+
+###  http://example.org/ai-ontology#hasAuthor
+:hasAuthor rdf:type owl:ObjectProperty ;
+           rdfs:domain :Paper ;
+           rdfs:range :Author ;
+           rdfs:comment "Relates a paper to its author(s)."@en ;
+           rdfs:label "has author"@en .
+
+
+###  http://example.org/ai-ontology#hasAuthorList
+:hasAuthorList rdf:type owl:ObjectProperty ;
+               owl:inverseOf :isAuthorListOf ;
+               rdfs:domain :Paper ;
+               rdfs:range :AuthorList ;
+               rdfs:comment "Relates a paper to its ordered list of authors."@en ;
+               rdfs:label "has author list"@en .
+
+
+###  http://example.org/ai-ontology#hasEvaluation
+:hasEvaluation rdf:type owl:ObjectProperty ;
+               owl:inverseOf :isEvaluationOf ;
+               rdfs:domain [ rdf:type owl:Class ;
+                             owl:unionOf ( :Model
+                                           :Paper
+                                         )
+                           ] ;
+               rdfs:range :Evaluation ;
+               rdfs:comment "Relates a paper or model to its evaluation metric."@en ;
+               rdfs:label "has evaluation"@en .
+
+
+###  http://example.org/ai-ontology#hasFirstNode
+:hasFirstNode rdf:type owl:ObjectProperty ;
+              owl:inverseOf :isFirstNodeOf ;
+              rdfs:domain :AuthorList ;
+              rdfs:range :AuthorListNode ;
+              rdfs:comment "Relates an author list to its first node."@en ;
+              rdfs:label "has first node"@en .
+
+
+###  http://example.org/ai-ontology#hasListAuthor
+:hasListAuthor rdf:type owl:ObjectProperty ;
+               owl:inverseOf :isListAuthorOf ;
+               rdfs:domain :AuthorListNode ;
+               rdfs:range :Author ;
+               rdfs:comment "Relates a node in the list to the corresponding author."@en ;
+               rdfs:label "has list author"@en .
+
+
+###  http://example.org/ai-ontology#hasMethod
+:hasMethod rdf:type owl:ObjectProperty ;
+           owl:inverseOf :isMethodOfModel ;
+           rdfs:domain :Model ;
+           rdfs:range :Method ;
+           rdfs:comment "Relates a model to the method it implements."@en ;
+           rdfs:label "has method"@en .
+
+
+###  http://example.org/ai-ontology#hasNextNode
+:hasNextNode rdf:type owl:ObjectProperty ;
+             owl:inverseOf :isPreviousNodeOf ;
+             rdf:type owl:TransitiveProperty ;
+             rdfs:domain :AuthorListNode ;
+             rdfs:range :AuthorListNode ;
+             rdfs:comment "Relates a node to the next node in the list."@en ;
+             rdfs:label "has next node"@en .
+
+
+###  http://example.org/ai-ontology#hostsDataset
+:hostsDataset rdf:type owl:ObjectProperty ;
+              owl:inverseOf :isHostedBy ;
+              rdfs:domain :Repository ;
+              rdfs:range :Dataset ;
+              rdfs:comment "Relates a repository to the datasets it hosts."@en ;
+              rdfs:label "hosts dataset"@en .
+
+
+###  http://example.org/ai-ontology#isAuthorListOf
+:isAuthorListOf rdf:type owl:ObjectProperty ;
+                rdfs:domain :AuthorList ;
+                rdfs:range :Paper ;
+                rdfs:comment "Relates an author list to the paper that owns it (inverse of hasAuthorList)."@en ;
+                rdfs:label "is author list of"@en .
+
+
+###  http://example.org/ai-ontology#isDatasetUsedBy
+:isDatasetUsedBy rdf:type owl:ObjectProperty ;
+                 owl:inverseOf :usesDataset ;
+                 rdfs:domain :Dataset ;
+                 rdfs:range [ rdf:type owl:Class ;
+                              owl:unionOf ( :Model
+                                            :Paper
+                                          )
+                            ] ;
+                 rdfs:comment "Relates a dataset to the papers or models that rely on it. (Inverse of usesDataset.)"@en ;
+                 rdfs:label "is dataset used by"@en .
+
+
+###  http://example.org/ai-ontology#isEvaluationOf
+:isEvaluationOf rdf:type owl:ObjectProperty ;
+                rdfs:domain :Evaluation ;
+                rdfs:range [ rdf:type owl:Class ;
+                             owl:unionOf ( :Model
+                                           :Paper
+                                         )
+                           ] ;
+                rdfs:comment "Relates an evaluation metric to the paper or model it assesses. (Inverse of hasEvaluation.)"@en ;
+                rdfs:label "is evaluation of"@en .
+
+
+###  http://example.org/ai-ontology#isFirstNodeOf
+:isFirstNodeOf rdf:type owl:ObjectProperty ;
+               rdfs:domain :AuthorListNode ;
+               rdfs:range :AuthorList ;
+               rdfs:comment "Relates an author list node to the list it is the first element of (inverse of hasFirstNode)."@en ;
+               rdfs:label "is first node of"@en .
+
+
+###  http://example.org/ai-ontology#isHostedBy
+:isHostedBy rdf:type owl:ObjectProperty ;
+            rdfs:domain :Dataset ;
+            rdfs:range :Repository ;
+            rdfs:comment "Relates a dataset to the repository that hosts it. (Inverse of hostsDataset.)"@en ;
+            rdfs:label "is hosted by"@en .
+
+
+###  http://example.org/ai-ontology#isListAuthorOf
+:isListAuthorOf rdf:type owl:ObjectProperty ;
+                rdfs:domain :Author ;
+                rdfs:range :AuthorListNode ;
+                rdfs:comment "Relates a list node to the author it represents (inverse of hasListAuthor)."@en ;
+                rdfs:label "is list author of"@en .
+
+
+###  http://example.org/ai-ontology#isMethodOfModel
+:isMethodOfModel rdf:type owl:ObjectProperty ;
+                 rdfs:domain :Method ;
+                 rdfs:range :Model ;
+                 rdfs:comment "Relates a method to the model that implements it. (Inverse of hasMethod.)"@en ;
+                 rdfs:label "is method of model"@en .
+
+
+###  http://example.org/ai-ontology#isMethodUsedBy
+:isMethodUsedBy rdf:type owl:ObjectProperty ;
+                owl:inverseOf :usesMethod ;
+                rdfs:domain :Method ;
+                rdfs:range [ rdf:type owl:Class ;
+                             owl:unionOf ( :Model
+                                           :Paper
+                                         )
+                           ] ;
+                rdfs:comment "Relates a method to the papers or models that employ it. (Inverse of usesMethod.)"@en ;
+                rdfs:label "is method used by"@en .
+
+
+###  http://example.org/ai-ontology#isModelEmployedBy
+:isModelEmployedBy rdf:type owl:ObjectProperty ;
+                   rdfs:domain :Model ;
+                   rdfs:range :Paper ;
+                   rdfs:comment "Relates a model to the papers that employ it. (Inverse of employsModel.)"@en ;
+                   rdfs:label "is model employed by"@en .
+
+
+###  http://example.org/ai-ontology#isPreviousNodeOf
+:isPreviousNodeOf rdf:type owl:ObjectProperty ,
+                           owl:TransitiveProperty ;
+                  rdfs:domain :AuthorListNode ;
+                  rdfs:range :AuthorListNode ;
+                  rdfs:comment "Relates a node to the node that precedes it in the author list (inverse of hasNextNode)."@en ;
+                  rdfs:label "is previous node of"@en .
+
+
+###  http://example.org/ai-ontology#isTaskAddressedBy
+:isTaskAddressedBy rdf:type owl:ObjectProperty ;
+                   rdfs:domain :Task ;
+                   rdfs:range [ rdf:type owl:Class ;
+                                owl:unionOf ( :Model
+                                              :Paper
+                                            )
+                              ] ;
+                   rdfs:comment "Relates a task to the papers or models that address it. (Inverse of addressesTask.)"@en ;
+                   rdfs:label "is task addressed by"@en .
+
+
+###  http://example.org/ai-ontology#isTrainingAlgorithmOf
+:isTrainingAlgorithmOf rdf:type owl:ObjectProperty ;
+                       owl:inverseOf :usesTrainingAlgorithm ;
+                       rdfs:domain :TrainingAlgorithm ;
+                       rdfs:range :Model ;
+                       rdfs:comment "Relates a training algorithm to the model it is used to train. (Inverse of usesTrainingAlgorithm.)"@en ;
+                       rdfs:label "is training algorithm of"@en .
+
+
+###  http://example.org/ai-ontology#publishedIn
+:publishedIn rdf:type owl:ObjectProperty ;
+             owl:inverseOf :publishes ;
+             rdf:type owl:FunctionalProperty ;
+             rdfs:domain :Paper ;
+             rdfs:range [ rdf:type owl:Class ;
+                          owl:unionOf ( :Conference
+                                        :Journal
+                                      )
+                        ] ;
+             rdfs:comment "Relates a paper to its publication venue."@en ;
+             rdfs:label "published in"@en .
+
+
+###  http://example.org/ai-ontology#publishes
+:publishes rdf:type owl:ObjectProperty ;
+           rdfs:domain [ rdf:type owl:Class ;
+                         owl:unionOf ( :Conference
+                                       :Journal
+                                     )
+                       ] ;
+           rdfs:range :Paper ;
+           rdfs:comment "Relates a conference or journal to the papers published within it. (Inverse of publishedIn.)"@en ;
+           rdfs:label "publishes"@en .
+
+
+###  http://example.org/ai-ontology#usesDataset
+:usesDataset rdf:type owl:ObjectProperty ;
+             rdfs:domain [ rdf:type owl:Class ;
+                           owl:unionOf ( :Model
+                                         :Paper
+                                       )
+                         ] ;
+             rdfs:range :Dataset ;
+             rdfs:comment "Relates a paper or model to the dataset it uses."@en ;
+             rdfs:label "uses dataset"@en .
+
+
+###  http://example.org/ai-ontology#usesMethod
+:usesMethod rdf:type owl:ObjectProperty ;
+            rdfs:domain [ rdf:type owl:Class ;
+                          owl:unionOf ( :Model
+                                        :Paper
+                                      )
+                        ] ;
+            rdfs:range :Method ;
+            rdfs:comment "Relates a paper or model to the method it uses."@en ;
+            rdfs:label "uses method"@en .
+
+
+###  http://example.org/ai-ontology#usesTrainingAlgorithm
+:usesTrainingAlgorithm rdf:type owl:ObjectProperty ;
+                       rdfs:domain :Model ;
+                       rdfs:range :TrainingAlgorithm ;
+                       rdfs:comment "Relates a model to the training algorithm it uses."@en ;
+                       rdfs:label "uses training algorithm"@en .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://example.org/ai-ontology#hasDOI
+:hasDOI rdf:type owl:DatatypeProperty ,
+                 owl:FunctionalProperty ;
+        rdfs:domain :Paper ;
+        rdfs:range xsd:string ;
+        rdfs:comment "Each paper has at most one DOI."@en ;
+        rdfs:label "has DOI"@en .
+
+
+###  http://example.org/ai-ontology#hasDate
+:hasDate rdf:type owl:DatatypeProperty ,
+                  owl:FunctionalProperty ;
+         rdfs:domain [ rdf:type owl:Class ;
+                       owl:unionOf ( :Conference
+                                     :Dataset
+                                     :Evaluation
+                                     :Journal
+                                     :Paper
+                                   )
+                     ] ;
+         rdfs:range xsd:date ;
+         rdfs:comment "Date of publication/event."@en ;
+         rdfs:label "has date"@en .
+
+
+###  http://example.org/ai-ontology#hasName
+:hasName rdf:type owl:DatatypeProperty ;
+         rdfs:domain :Author ;
+         rdfs:range xsd:string ;
+         rdfs:comment "Nome completo dell'autore."@en ;
+         rdfs:label "has name"@en .
+
+
+###  http://example.org/ai-ontology#hasTitle
+:hasTitle rdf:type owl:DatatypeProperty ,
+                   owl:FunctionalProperty ;
+          rdfs:domain [ rdf:type owl:Class ;
+                        owl:unionOf ( :Dataset
+                                      :Evaluation
+                                      :Method
+                                      :Model
+                                      :Paper
+                                      :Repository
+                                      :Task
+                                    )
+                      ] ;
+          rdfs:range xsd:string ;
+          rdfs:comment "Title of entity."@en ;
+          rdfs:label "has title"@en .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://example.org/ai-ontology#ApplicationArea
+:ApplicationArea rdf:type owl:Class ;
+                 owl:equivalentClass [ rdf:type owl:Class ;
+                                       owl:oneOf ( :ComputerVision
+                                                   :NaturalLanguageProcessing
+                                                 )
+                                     ] ;
+                 rdfs:comment """
+            Enumerazione delle possibili aree applicative (es. CV, NLP).
+        """@en ;
+                 rdfs:label "Application Area"@en .
+
+
+###  http://example.org/ai-ontology#Author
+:Author rdf:type owl:Class ;
+        rdfs:comment "Author of papers."@en ;
+        rdfs:label "Author"@en ;
+        skos:broadMatch <http://xmlns.com/foaf/0.1/Person> .
+
+
+###  http://example.org/ai-ontology#AuthorList
+:AuthorList rdf:type owl:Class ;
+            rdfs:comment "A list of authors in a specific order."@en ;
+            rdfs:label "Author List"@en .
+
+
+###  http://example.org/ai-ontology#AuthorListNode
+:AuthorListNode rdf:type owl:Class ;
+                rdfs:comment "A node in the ordered author list."@en ;
+                rdfs:label "Author List Node"@en .
+
+
+###  http://example.org/ai-ontology#ComputerVision
+:ComputerVision rdf:type owl:Class ;
+                rdfs:subClassOf :ApplicationArea .
+
+
+###  http://example.org/ai-ontology#Conference
+:Conference rdf:type owl:Class ;
+            rdfs:comment "Academic conference."@en ;
+            rdfs:label "Conference"@en ;
+            skos:exactMatch <http://swrc.ontoware.org/ontology#Conference> .
+
+
+###  http://example.org/ai-ontology#Dataset
+:Dataset rdf:type owl:Class ;
+         rdfs:subClassOf [ rdf:type owl:Restriction ;
+                           owl:onProperty :hasTitle ;
+                           owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                           owl:onDataRange xsd:string
+                         ] ;
+         rdfs:comment "Dataset used in AI."@en ;
+         rdfs:label "Dataset"@en ;
+         skos:exactMatch <http://schema.org/Dataset> .
+
+
+###  http://example.org/ai-ontology#DeepLearningMethod
+:DeepLearningMethod rdf:type owl:Class ;
+                    rdfs:subClassOf :MachineLearningMethod ;
+                    rdfs:comment "A method based on deep learning techniques."@en ;
+                    rdfs:label "Deep Learning Method"@en .
+
+
+###  http://example.org/ai-ontology#DeepLearningModel
+:DeepLearningModel rdf:type owl:Class ;
+                   rdfs:subClassOf :MachineLearningModel ;
+                   rdfs:comment "Deep learning neural networks."@en ;
+                   rdfs:label "Deep Learning Model"@en ;
+                   skos:broadMatch <https://cso.kmi.open.ac.uk/topics/neural_networks> .
+
+
+###  http://example.org/ai-ontology#Evaluation
+:Evaluation rdf:type owl:Class ;
+            rdfs:comment "Evaluation metric."@en ;
+            rdfs:label "Evaluation"@en .
+
+
+###  http://example.org/ai-ontology#HybridMethod
+:HybridMethod rdf:type owl:Class ;
+              rdfs:subClassOf :Method ;
+              rdfs:comment "A method integrating symbolic and sub-symbolic approaches."@en ;
+              rdfs:label "Hybrid Method"@en .
+
+
+###  http://example.org/ai-ontology#HybridModel
+:HybridModel rdf:type owl:Class ;
+             rdfs:subClassOf :Model ;
+             rdfs:comment "Hybrid AI models integrating symbolic and sub-symbolic."@en ;
+             rdfs:label "Hybrid Model"@en ;
+             skos:exactMatch <https://cso.kmi.open.ac.uk/topics/neurosymbolic_ai> .
+
+
+###  http://example.org/ai-ontology#Journal
+:Journal rdf:type owl:Class ;
+         rdfs:comment "Academic journal."@en ;
+         rdfs:label "Journal"@en ;
+         skos:exactMatch <http://swrc.ontoware.org/ontology#Journal> .
+
+
+###  http://example.org/ai-ontology#MachineLearningMethod
+:MachineLearningMethod rdf:type owl:Class ;
+                       rdfs:subClassOf :Method ;
+                       rdfs:comment "A method employing machine learning techniques."@en ;
+                       rdfs:label "Machine Learning Method"@en .
+
+
+###  http://example.org/ai-ontology#MachineLearningModel
+:MachineLearningModel rdf:type owl:Class ;
+                      owl:equivalentClass [ rdf:type owl:Restriction ;
+                                            owl:onProperty :usesTrainingAlgorithm ;
+                                            owl:someValuesFrom :TrainingAlgorithm
+                                          ] ;
+                      rdfs:subClassOf :Model ;
+                      rdfs:comment "ML model trained by algorithms."@en ;
+                      rdfs:label "Machine Learning Model"@en ;
+                      skos:exactMatch <https://cso.kmi.open.ac.uk/topics/machine_learning> .
+
+
+###  http://example.org/ai-ontology#Method
+:Method rdf:type owl:Class ;
+        rdfs:comment "AI method used."@en ;
+        rdfs:label "Method"@en .
+
+
+###  http://example.org/ai-ontology#Model
+:Model rdf:type owl:Class ;
+       rdfs:comment "Generic AI model."@en ;
+       rdfs:label "Model"@en .
+
+
+###  http://example.org/ai-ontology#NaturalLanguageProcessing
+:NaturalLanguageProcessing rdf:type owl:Class ;
+                           rdfs:subClassOf :ApplicationArea .
+
+
+###  http://example.org/ai-ontology#Paper
+:Paper rdf:type owl:Class ;
+       rdfs:subClassOf [ rdf:type owl:Restriction ;
+                         owl:onProperty :hasAuthor ;
+                         owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                         owl:onClass :Author
+                       ] ;
+       rdfs:comment "Research paper."@en ;
+       rdfs:label "Paper"@en ;
+       skos:narrowMatch <http://purl.org/ontology/bibo/Document> ;
+       skos:exactMatch <http://purl.org/ontology/bibo/AcademicArticle> .
+
+
+###  http://example.org/ai-ontology#Repository
+:Repository rdf:type owl:Class ;
+            rdfs:comment "Repository hosting resources."@en ;
+            rdfs:label "Repository"@en .
+
+
+###  http://example.org/ai-ontology#RuleBasedMethod
+:RuleBasedMethod rdf:type owl:Class ;
+                 rdfs:subClassOf :Method ;
+                 rdfs:comment "A method based on explicit rules."@en ;
+                 rdfs:label "Rule-Based Method"@en .
+
+
+###  http://example.org/ai-ontology#RuleBasedModel
+:RuleBasedModel rdf:type owl:Class ;
+                rdfs:subClassOf :Model ;
+                rdfs:comment "AI model based on explicit rules."@en ;
+                rdfs:label "Rule-Based Model"@en ;
+                skos:narrowMatch <https://cso.kmi.open.ac.uk/topics/expert_knowledge> .
+
+
+###  http://example.org/ai-ontology#SymbolicMethod
+:SymbolicMethod rdf:type owl:Class ;
+                rdfs:subClassOf :RuleBasedMethod ;
+                rdfs:comment "A method using symbolic approaches."@en ;
+                rdfs:label "Symbolic Method"@en .
+
+
+###  http://example.org/ai-ontology#SymbolicModel
+:SymbolicModel rdf:type owl:Class ;
+               rdfs:subClassOf :RuleBasedModel ;
+               rdfs:comment "Symbolic AI models."@en ;
+               rdfs:label "Symbolic Model"@en ;
+               skos:narrowMatch <https://cso.kmi.open.ac.uk/topics/knowledge_representation> .
+
+
+###  http://example.org/ai-ontology#Task
+:Task rdf:type owl:Class ;
+      rdfs:comment "AI task addressed."@en ;
+      rdfs:label "Task"@en .
+
+
+###  http://example.org/ai-ontology#TraditionalMLMethod
+:TraditionalMLMethod rdf:type owl:Class ;
+                     rdfs:subClassOf :MachineLearningMethod ;
+                     rdfs:comment "A method based on traditional machine learning (e.g., SVM, RandomForest)."@en ;
+                     rdfs:label "Traditional ML Method"@en ;
+                     skos:narrowMatch <https://cso.kmi.open.ac.uk/topics/machine_learning> .
+
+
+###  http://example.org/ai-ontology#TraditionalMLModel
+:TraditionalMLModel rdf:type owl:Class ;
+                    rdfs:subClassOf :MachineLearningModel ;
+                    rdfs:comment "Traditional ML algorithms."@en ;
+                    rdfs:label "Traditional ML Model"@en ;
+                    skos:narrowMatch <https://cso.kmi.open.ac.uk/topics/machine_learning> .
+
+
+###  http://example.org/ai-ontology#TrainingAlgorithm
+:TrainingAlgorithm rdf:type owl:Class ;
+                   rdfs:comment "Algorithm for training models."@en ;
+                   rdfs:label "Training Algorithm"@en .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://example.org/ai-ontology#ComputerVision
+:ComputerVision rdf:type owl:NamedIndividual .
+
+
+###  http://example.org/ai-ontology#ComputerVisionClass
+:ComputerVisionClass rdf:type owl:NamedIndividual ,
+                              :ApplicationArea ;
+                     rdfs:label "Computer Vision"@en .
+
+
+###  http://example.org/ai-ontology#NaturalLanguageProcessing
+:NaturalLanguageProcessing rdf:type owl:NamedIndividual .
+
+
+###  http://example.org/ai-ontology#NaturalLanguageProcessingClass
+:NaturalLanguageProcessingClass rdf:type owl:NamedIndividual ,
+                                         :ApplicationArea ;
+                                rdfs:label "Natural Language Processing"@en .
+
+
+#################################################################
+#    Annotations
+#################################################################
+
+:ComputerVision rdfs:comment "Subset di ApplicationArea per Computer Vision."@en ;
+                rdfs:label "Computer Vision"@en .
+
+
+:NaturalLanguageProcessing rdfs:comment "Subset di ApplicationArea per NLP."@en ;
+                           rdfs:label "Natural Language Processing"@en .
+
+
+<https://cso.kmi.open.ac.uk/topics/expert_knowledge> rdfs:comment "Computer Science Ontology concept for the topic 'Expert Knowledge'."@en ;
+                                                     rdfs:label "Expert Knowledge (CSO)"@en .
+
+
+<https://cso.kmi.open.ac.uk/topics/knowledge_representation> rdfs:comment "Computer Science Ontology concept for the topic 'Knowledge Representation'."@en ;
+                                                             rdfs:label "Knowledge Representation (CSO)"@en .
+
+
+<https://cso.kmi.open.ac.uk/topics/machine_learning> rdfs:comment "Computer Science Ontology concept for the topic 'Machine Learning'."@en ;
+                                                     rdfs:label "Machine Learning (CSO)"@en .
+
+
+<https://cso.kmi.open.ac.uk/topics/neural_networks> rdfs:comment "Computer Science Ontology concept for the topic 'Neural Networks'."@en ;
+                                                    rdfs:label "Neural Networks (CSO)"@en .
+
+
+<https://cso.kmi.open.ac.uk/topics/neurosymbolic_ai> rdfs:comment "Computer Science Ontology concept for the topic 'Neuro‑Symbolic AI'."@en ;
+                                                     rdfs:label "Neuro‑Symbolic AI (CSO)"@en .
+
+
+#################################################################
+#    General axioms
+#################################################################
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :Author
+                :Conference
+                :Dataset
+                :Evaluation
+                :Journal
+                :Method
+                :Model
+                :Paper
+                :Repository
+                :Task
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :DeepLearningMethod
+                :HybridMethod
+                :SymbolicMethod
+                :TraditionalMLMethod
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :DeepLearningModel
+                :HybridModel
+                :SymbolicModel
+                :TraditionalMLModel
+              )
+] .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi

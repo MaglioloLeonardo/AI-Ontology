@@ -1,0 +1,103 @@
+**1. Counting Papers per Task with Filter, GROUP BY, HAVING, and ORDER BY**  
+```sparql
+PREFIX ai: <http://example.org/ai-ontology#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?taskTitle (COUNT(?paper) AS ?numPapers)
+WHERE {
+  ?paper a ai:Paper ;
+         ai:addressesTask ?task .
+  ?task ai:hasTitle ?taskTitle .
+}
+GROUP BY ?taskTitle
+HAVING (COUNT(?paper) > 1)
+ORDER BY DESC(?numPapers)
+```
+---
+
+**2. Authors Publishing in Conferences (Subquery, GROUP BY, HAVING, and ORDER BY)**  
+```sparql
+PREFIX ai: <http://example.org/ai-ontology#>
+
+SELECT ?authorName ?paperCount
+WHERE {
+  {
+    SELECT ?author (COUNT(?paper) AS ?paperCount)
+    WHERE {
+      ?paper a ai:Paper ;
+             ai:hasAuthor ?author ;
+             ai:publishedIn ?venue .
+      ?venue a ai:Conference .
+    }
+    GROUP BY ?author
+    HAVING (COUNT(?paper) >= 1)
+  }
+  ?author ai:hasTitle ?authorName .
+}
+ORDER BY DESC(?paperCount)
+```
+---
+
+**3. Deep Learning Models Used in Papers (Aggregation, Subquery, COUNT, MAX, HAVING, and ORDER BY)**  
+```sparql
+PREFIX ai: <http://example.org/ai-ontology#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?modelTitle (MAX(?date) AS ?latestPublication) (COUNT(?paper) AS ?numPapers)
+WHERE {
+  ?paper a ai:Paper ;
+         ai:employsModel ?model ;
+         ai:hasDate ?date .
+  ?model a ai:DeepLearningModel ;
+         ai:hasTitle ?modelTitle .
+}
+GROUP BY ?modelTitle
+HAVING (COUNT(?paper) >= 2)
+ORDER BY DESC(?latestPublication)
+```
+---
+
+**4. Annual Distribution of Papers in Conferences (Subquery, BIND, GROUP BY, HAVING, and ORDER BY)**  
+```sparql
+PREFIX ai: <http://example.org/ai-ontology#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?year (COUNT(?paper) AS ?numPapers)
+WHERE {
+  {
+    SELECT ?paper (YEAR(?date) AS ?year)
+    WHERE {
+      ?paper a ai:Paper ;
+             ai:hasDate ?date ;
+             ai:publishedIn ?venue .
+      ?venue a ai:Conference .
+    }
+  }
+}
+GROUP BY ?year
+HAVING (COUNT(?paper) > 2)
+ORDER BY ?year
+```
+---
+
+**5. Models and Training Algorithms with Significant Usage (Subquery, COUNT, GROUP BY, HAVING, and ORDER BY)**  
+```sparql
+PREFIX ai: <http://example.org/ai-ontology#>
+
+SELECT ?modelTitle ?algorithmTitle ?usageCount
+WHERE {
+  {
+    SELECT ?model (COUNT(?paper) AS ?usageCount)
+    WHERE {
+      ?paper a ai:Paper ;
+             ai:employsModel ?model .
+    }
+    GROUP BY ?model
+    HAVING (COUNT(?paper) > 1)
+  }
+  ?model ai:hasTitle ?modelTitle ;
+         ai:usesTrainingAlgorithm ?alg .
+  ?alg ai:hasTitle ?algorithmTitle .
+}
+ORDER BY DESC(?usageCount)
+```

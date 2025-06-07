@@ -1,0 +1,57 @@
+**2. Authors and Their Papers**  
+```sparql
+PREFIX ai: <http://example.org/ai-ontology#>
+
+SELECT ?authorName ?paperTitle
+WHERE {
+  ?paper a ai:Paper ;
+         ai:hasTitle ?paperTitle ;
+         ai:hasAuthor ?author .
+  ?author ai:hasTitle ?authorName .
+}
+```
+---
+
+**3. Papers Published After 2023 (Date Filter)**  
+```sparql
+PREFIX ai: <http://example.org/ai-ontology#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?paper ?title ?date
+WHERE {
+  ?paper a ai:Paper ;
+         ai:hasTitle ?title ;
+         ai:hasDate ?date .
+  FILTER (?date > "2025-03-12"^^xsd:date)
+}
+```
+---
+
+**4. Counting Papers per Task**  
+```sparql
+PREFIX ai: <http://example.org/ai-ontology#>
+
+SELECT ?taskTitle (COUNT(?paper) AS ?paperCount)
+WHERE {
+  ?paper a ai:Paper ;
+         ai:addressesTask ?task .
+  ?task ai:hasTitle ?taskTitle .
+}
+GROUP BY ?taskTitle
+ORDER BY DESC(?paperCount)
+```
+---
+
+**5. Models and Their Training Algorithms**  
+```sparql
+PREFIX ai: <http://example.org/ai-ontology#>
+
+SELECT ?model ?modelTitle ?algorithmTitle
+WHERE {
+  ?model a ai:Model ;
+         ai:hasTitle ?modelTitle ;
+         ai:usesTrainingAlgorithm ?alg .
+  ?alg ai:hasTitle ?algorithmTitle .
+}
+ORDER BY ?modelTitle
+```
