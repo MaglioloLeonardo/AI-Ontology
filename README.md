@@ -23,7 +23,7 @@ A semantic knowledge graph for **AI research artefacts**—papers, models, datas
    * Inverse properties for intuitive navigation (e.g., `isTestedBy` ↔ `testsModel`).
 2. **Alignment & Interoperability:**
 
-   * Hooked into established vocabularies: CSO, ACM CCS, CPC, EuroSciVoc.
+   * Hooked into established vocabularies like CSO.
    * Enables cross-dataset reasoning, e.g. linking a model’s evaluation on multiple benchmarks.
 3. **Ordered Authorship:**
 
