@@ -42,16 +42,6 @@ A semantic knowledge graph for **AI research artefacts**—papers, models, datas
 
 ---
 
-## ⚙️ Quick Start
-
-1. **Clone:** `git clone https://github.com/<user>/ai-systems-ontology.git`
-2. **Explore:** Load `ontology/ai-ontology.ttl` in Protégé.
-3. **Query:** Use any SPARQL client—try `queries/simple-query.txt` for live examples.
-
-> *Tip:* Enable OWL reasoning to unlock inferred relationships.
-
----
-
 ## 🤝 Contributing & Next Steps
 
 * **Extend Alignments:** Add hooks to new taxonomies (e.g., AI ethics vocabularies).
